@@ -18,4 +18,8 @@ contract BoxV2 {
     function version() public pure returns (uint8) {
         return 2;
     }
+
+    function increment() public view returns (uint256) {
+        return value + 2;
+    }
 }
