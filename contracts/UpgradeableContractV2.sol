@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.28;
 
-contract BoxV2 {
+contract UpgradeableContractV2 {
     uint256 internal value;
 
     event ValueChanged(uint256 newValue);
@@ -19,7 +19,8 @@ contract BoxV2 {
         return 2;
     }
 
-    function increment() public view returns (uint256) {
-        return value + 2;
+    function increment() public {
+        value = value + 2;
+        emit ValueChanged(value);
     }
 }
