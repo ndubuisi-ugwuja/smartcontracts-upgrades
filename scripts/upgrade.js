@@ -29,7 +29,7 @@ async function main() {
     // 3. Upgrade proxy
     console.log("→ Upgrading proxy...");
     const proxyAdmin = await ethers.getContractAt("UpgradeableContractProxyAdmin", PROXY_ADMIN_ADDRESS);
-    const upgradeTx = await proxyAdmin.upgradeAndCall(PROXY_ADDRESS, v2Address, "0x");
+    const upgradeTx = await proxyAdmin.upgrade(PROXY_ADDRESS, v2Address);
     console.log("Transaction hash:", upgradeTx.hash);
     await upgradeTx.wait();
     console.log("✓ Upgrade complete!");
