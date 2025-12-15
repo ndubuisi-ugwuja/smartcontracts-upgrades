@@ -17,18 +17,28 @@ module.exports = buildModule("UpgradeModule", (m) => {
     console.log("✓ V2 implementation deployment queued");
     console.log("");
 
-    // Get ProxyAdmin
+    // Get EXISTING ProxyAdmin (use unique ID to avoid conflict)
     console.log("→ Connecting to ProxyAdmin...");
-    const proxyAdmin = m.contractAt("UpgradeableContractProxyAdmin", proxyAdminAddress);
+
+    const proxyAdmin = m.contractAt(
+        "UpgradeableContractProxyAdmin",
+
+        proxyAdminAddress,
+
+        { id: "ExistingProxyAdmin" }, // Add unique ID
+    );
+
     console.log("✓ ProxyAdmin connected");
     console.log("");
 
     // Upgrade
     console.log("→ Executing upgrade transaction...");
-    m.call(proxyAdmin, "upgradeAndCall", [proxyAddress, upgradeableContractV2, "0x"]);
+    m.call(proxyAdmin, "upgradeAndCall", [proxyAddress, upgradeableContractV2, "0x"], {
+        id: "UpgradeToV2Call", // Add unique ID
+    });
+
     console.log("✓ Upgrade transaction queued");
     console.log("");
-
     console.log("====================================");
     console.log("Upgrade Complete!");
     console.log("====================================\n");

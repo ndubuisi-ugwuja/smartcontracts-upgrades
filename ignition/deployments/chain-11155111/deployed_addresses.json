@@ -4,5 +4,6 @@
   "UpgradeableContractModule#TransparentUpgradeableProxy": "0x4c40cC719DE659c4E721D24d4062abD52430D375",
   "UpgradeableContractModule#ProxiedUpgradeableContract": "0x4c40cC719DE659c4E721D24d4062abD52430D375",
   "UpgradeModule#UpgradeableContractProxyAdmin": "0xA974d7CD9a10259F1f821d54a84879237f21A50d",
-  "UpgradeModule#UpgradeableContractV2": "0x2e3cd8928A6877aecC04c6E3A91377ca72794689"
+  "UpgradeModule#UpgradeableContractV2": "0x2e3cd8928A6877aecC04c6E3A91377ca72794689",
+  "UpgradeModule#ExistingProxyAdmin": "0xA974d7CD9a10259F1f821d54a84879237f21A50d"
 }
