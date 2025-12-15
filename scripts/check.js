@@ -1,51 +1,61 @@
+require("dotenv").config();
 const { ethers } = require("hardhat");
 
 async function main() {
-    const PROXY_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-    const IMPLEMENTATION_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-    const PROXY_ADMIN_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+    const PROXY_ADDRESS = process.env.PROXYADDRESS;
+    const IMPLEMENTATION_ADDRESS = process.env.UPGRADABLECONTRACTADDRESS;
+    const PROXY_ADMIN_ADDRESS = process.env.PROXYADMINADDRESS;
 
-    console.log("\n=== Proxy Diagnostic ===\n");
+    console.log("\n=== Sepolia Contract Diagnostic ===\n");
+    console.log("Proxy:", PROXY_ADDRESS);
+    console.log("Implementation:", IMPLEMENTATION_ADDRESS);
+    console.log("ProxyAdmin:", PROXY_ADMIN_ADDRESS);
+    console.log("");
 
-    // 1. Check proxy bytecode
+    // 1. Check if contracts have code
+    console.log("→ Checking deployed bytecode...");
     const proxyCode = await ethers.provider.getCode(PROXY_ADDRESS);
-    console.log("1. Proxy has code:", proxyCode !== "0x" && proxyCode !== "0x0");
-    console.log("   Bytecode length:", proxyCode.length);
-    console.log("");
-
-    // 2. Check implementation bytecode
     const implCode = await ethers.provider.getCode(IMPLEMENTATION_ADDRESS);
-    console.log("2. Implementation has code:", implCode !== "0x" && implCode !== "0x0");
-    console.log("   Bytecode length:", implCode.length);
+    const adminCode = await ethers.provider.getCode(PROXY_ADMIN_ADDRESS);
+
+    console.log("Proxy has code:", proxyCode !== "0x" && proxyCode.length > 2);
+    console.log("Implementation has code:", implCode !== "0x" && implCode.length > 2);
+    console.log("ProxyAdmin has code:", adminCode !== "0x" && adminCode.length > 2);
     console.log("");
 
-    // 3. Read implementation address from proxy storage
+    // 2. Read implementation from proxy storage
+    console.log("→ Reading implementation address from proxy...");
     const EIP1967_IMPLEMENTATION_SLOT = "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc";
     const storedImpl = await ethers.provider.getStorage(PROXY_ADDRESS, EIP1967_IMPLEMENTATION_SLOT);
-    const implFromStorage = ethers.getAddress("0x" + storedImpl.slice(-40));
-    console.log("3. Implementation address in proxy storage:", implFromStorage);
-    console.log("   Expected implementation address:", IMPLEMENTATION_ADDRESS);
-    console.log("   Addresses match:", implFromStorage.toLowerCase() === IMPLEMENTATION_ADDRESS.toLowerCase());
+    const implFromProxy = "0x" + storedImpl.slice(-40);
+    console.log("Implementation in proxy storage:", implFromProxy);
+    console.log("Expected implementation:", IMPLEMENTATION_ADDRESS);
+    console.log("Match:", implFromProxy.toLowerCase() === IMPLEMENTATION_ADDRESS.toLowerCase());
     console.log("");
 
-    // 4. Try calling implementation directly
-    console.log("4. Testing implementation contract directly...");
+    // 3. Try calling implementation directly
+    console.log("→ Testing implementation contract directly...");
     try {
-        const implContract = await ethers.getContractAt("UpgradeableContract", IMPLEMENTATION_ADDRESS);
-        const version = await implContract.version();
-        console.log("   ✓ Direct call to implementation works! Version:", version.toString());
+        const impl = await ethers.getContractAt("UpgradeableContract", IMPLEMENTATION_ADDRESS);
+        const version = await impl.version();
+        console.log("✓ Implementation version:", version.toString());
     } catch (error) {
-        console.log("   ✗ Direct call failed:", error.message);
+        console.log("✗ Implementation call failed:", error.message);
     }
     console.log("");
 
-    // 5. Check ProxyAdmin
-    const adminCode = await ethers.provider.getCode(PROXY_ADMIN_ADDRESS);
-    console.log("5. ProxyAdmin has code:", adminCode !== "0x" && adminCode !== "0x0");
-    console.log("   Bytecode length:", adminCode.length);
+    // 4. Try calling through proxy
+    console.log("→ Testing proxy call...");
+    try {
+        const proxy = await ethers.getContractAt("UpgradeableContract", PROXY_ADDRESS);
+        const version = await proxy.version();
+        console.log("✓ Proxy version:", version.toString());
+    } catch (error) {
+        console.log("✗ Proxy call failed:", error.message);
+    }
     console.log("");
 
-    console.log("=== End Diagnostic ===\n");
+    console.log("=== Diagnostic Complete ===\n");
 }
 
 main()

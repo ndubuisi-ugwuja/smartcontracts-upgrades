@@ -1,8 +1,6 @@
 {
-  "UpgradeableContractModule#UpgradeableContract": "0x868A14dd5D1F41249bf5818E5F95CAB97DA38ec0",
-  "UpgradeableContractModule#UpgradeableContractProxyAdmin": "0xC44f72538842a1EB7c277F3aD673f49250b1958c",
-  "UpgradeableContractModule#TransparentUpgradeableProxy": "0xa67dB7EBaDABF055ffa09C202861813Cd5ac55A8",
-  "UpgradeableContractModule#ProxiedUpgradeableContract": "0xa67dB7EBaDABF055ffa09C202861813Cd5ac55A8",
-  "UpgradeModule#ExistingProxyAdmin": "0xC44f72538842a1EB7c277F3aD673f49250b1958c",
-  "UpgradeModule#UpgradeableContractV2": "0x911373D8A2a5dE1dD0524656De3d269a8FcD033F"
+  "UpgradeableContractModule#UpgradeableContract": "0x816B0205acCED2A6D4c9183b12ED4593aF1AA1eE",
+  "UpgradeableContractModule#UpgradeableContractProxyAdmin": "0x7BFcDe425c075Ba76216C415a33f0D6503C12108",
+  "UpgradeableContractModule#TransparentUpgradeableProxy": "0xfA30b2c9f902849Ef98F1c25dA824F29ec7f7B80",
+  "UpgradeableContractModule#ProxiedUpgradeableContract": "0xfA30b2c9f902849Ef98F1c25dA824F29ec7f7B80"
 }
