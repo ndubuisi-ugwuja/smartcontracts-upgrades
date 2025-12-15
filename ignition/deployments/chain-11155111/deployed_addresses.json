@@ -1,0 +1,8 @@
+{
+  "UpgradeableContractModule#UpgradeableContract": "0xEF95A430D0a0c05412eff37Fa85eC1D2312B6300",
+  "UpgradeableContractModule#UpgradeableContractProxyAdmin": "0xA974d7CD9a10259F1f821d54a84879237f21A50d",
+  "UpgradeableContractModule#TransparentUpgradeableProxy": "0x4c40cC719DE659c4E721D24d4062abD52430D375",
+  "UpgradeableContractModule#ProxiedUpgradeableContract": "0x4c40cC719DE659c4E721D24d4062abD52430D375",
+  "UpgradeModule#UpgradeableContractProxyAdmin": "0xA974d7CD9a10259F1f821d54a84879237f21A50d",
+  "UpgradeModule#UpgradeableContractV2": "0x2e3cd8928A6877aecC04c6E3A91377ca72794689"
+}
