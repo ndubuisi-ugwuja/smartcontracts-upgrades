@@ -2,8 +2,6 @@ const { ethers } = require("hardhat");
 require("dotenv").config();
 
 async function main() {
-    const [admin, user] = await ethers.getSigners();
-
     const PROXY_ADDRESS = process.env.PROXYADDRESS;
     const PROXY_ADMIN_ADDRESS = process.env.PROXYADMINADDRESS;
 
@@ -14,7 +12,7 @@ async function main() {
 
     // 1. Check V1 version
     console.log("→ Checking current version...");
-    const proxyV1 = await ethers.getContractAt("UpgradeableContract", PROXY_ADDRESS, user);
+    const proxyV1 = await ethers.getContractAt("UpgradeableContract", PROXY_ADDRESS);
     const currentVersion = await proxyV1.version();
     console.log("✓ Current version:", currentVersion.toString());
     console.log("");
@@ -30,8 +28,8 @@ async function main() {
 
     // 3. Upgrade proxy
     console.log("→ Upgrading proxy...");
-    const proxyAdmin = await ethers.getContractAt("UpgradeableContractProxyAdmin", PROXY_ADMIN_ADDRESS, admin);
-    const upgradeTx = await proxyAdmin.upgrade(PROXY_ADDRESS, v2Address);
+    const proxyAdmin = await ethers.getContractAt("UpgradeableContractProxyAdmin", PROXY_ADMIN_ADDRESS);
+    const upgradeTx = await proxyAdmin.upgradeAndCall(PROXY_ADDRESS, v2Address, "0x");
     console.log("Transaction hash:", upgradeTx.hash);
     await upgradeTx.wait();
     console.log("✓ Upgrade complete!");
@@ -39,7 +37,7 @@ async function main() {
 
     // 4. Verify upgrade
     console.log("→ Verifying upgrade...");
-    const proxyV2 = await ethers.getContractAt("UpgradeableContractV2", PROXY_ADDRESS, user);
+    const proxyV2 = await ethers.getContractAt("UpgradeableContractV2", PROXY_ADDRESS);
     const newVersion = await proxyV2.version();
     console.log("✓ New version:", newVersion.toString());
     console.log("");
