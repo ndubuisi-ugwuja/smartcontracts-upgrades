@@ -1,4 +1,5 @@
 const { ethers } = require("hardhat");
+require("dotenv").config();
 
 async function main() {
     const PROXY_ADDRESS = process.env.PROXYADDRESS;
