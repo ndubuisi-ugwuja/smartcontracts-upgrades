@@ -104,13 +104,13 @@ contract UpgradeableContract {
 **Deployment creates 3 contracts:**
 
 1. Implementation V1 at: 0xAAA...
-2. ProxyAdmin at: 0xB10...E35B
-3. Proxy at:0x84E...De7f (THIS is the address users interact with)
+2. ProxyAdmin at: 0xB10...
+3. Proxy at: 0x84E... (THIS is the address users interact with)
 
 **Users interact with the Proxy:**
 
 ```JavaScript
-// User calls proxy address (example)
+// User calls proxy address
 proxy.store(42); // Proxy forwards to Implementation V1
 proxy.retrieve(); // Returns 42
 proxy.version(); // Returns 1
@@ -152,8 +152,8 @@ UpgradeableContractV2 deployed at: 0xBBB...
 
 // Tell ProxyAdmin to update the proxy
 proxyAdmin.upgradeAndCall(
-    proxyAddress,  // 0x84E...De7f (doesn't change!)
-    v2Address,     // 0x... (new implementation)
+    proxyAddress,  // 0x84E... (doesn't change!)
+    v2Address,     // 0xBBB... (new implementation)
     "0x"          // no initialization data
 );
 ```
@@ -161,10 +161,10 @@ proxyAdmin.upgradeAndCall(
 **What happens internally:**
 
 Before upgrade:
-Proxy (0x84E...De7f) points to → Implementation V1 (0xAAA...)
+Proxy (0x84E...) points to → Implementation V1 (0xAAA...)
 
 After upgrade:
-Proxy (0x84E...De7f) points to → Implementation V2 (0xBBB...)
+Proxy (0x84E...) points to → Implementation V2 (0xBBB...)
 
 ### Step 4: Use the Upgraded Contract
 
