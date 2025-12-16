@@ -7,7 +7,7 @@ async function main() {
     console.log("\n=== Finding ProxyAdmin Address ===\n");
 
     // Read the admin slot from the proxy
-    const EIP1967_ADMIN_SLOT = "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103";
+    const EIP1967_ADMIN_SLOT = process.env.EIP1967ADMINSLOT;
     const adminStorage = await ethers.provider.getStorage(PROXY_ADDRESS, EIP1967_ADMIN_SLOT);
     const proxyAdminAddress = ethers.getAddress("0x" + adminStorage.slice(-40));
 
