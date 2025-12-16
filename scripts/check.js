@@ -5,77 +5,65 @@ async function main() {
     const PROXY_ADDRESS = process.env.PROXYADDRESS;
     const PROXY_ADMIN_ADDRESS = process.env.PROXYADMINADDRESS;
 
-    console.log("\n=== Debugging Upgrade Issue ===\n");
+    console.log("\n=== Checking ProxyAdmin Configuration ===\n");
 
     const [signer] = await ethers.getSigners();
-    console.log("Deployer address:", signer.address);
+    console.log("Your address:", signer.address);
     console.log("");
 
-    // 1. Check who owns the ProxyAdmin
+    // Check ProxyAdmin owner
     const proxyAdmin = await ethers.getContractAt("UpgradeableContractProxyAdmin", PROXY_ADMIN_ADDRESS);
 
     console.log("→ Checking ProxyAdmin owner...");
     try {
         const owner = await proxyAdmin.owner();
         console.log("ProxyAdmin owner:", owner);
-        console.log("Your address:", signer.address);
-        console.log("You are owner:", owner.toLowerCase() === signer.address.toLowerCase());
+        console.log("Are you the owner?", owner.toLowerCase() === signer.address.toLowerCase());
     } catch (error) {
-        console.log("✗ Could not get owner:", error.message);
+        console.log("✗ Error getting owner:", error.message);
     }
     console.log("");
 
-    // 2. Check current implementation
-    console.log("→ Checking current implementation...");
+    // Check admin of the proxy
+    console.log("→ Checking proxy admin...");
     try {
-        const currentImpl = await proxyAdmin.getProxyImplementation(PROXY_ADDRESS);
-        console.log("Current implementation:", currentImpl);
+        // Read the admin slot directly from the proxy
+        const EIP1967_ADMIN_SLOT = "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103";
+        const adminStorage = await ethers.provider.getStorage(PROXY_ADDRESS, EIP1967_ADMIN_SLOT);
+        const adminFromProxy = ethers.getAddress("0x" + adminStorage.slice(-40));
+        console.log("Admin stored in proxy:", adminFromProxy);
+        console.log("Expected ProxyAdmin:", PROXY_ADMIN_ADDRESS);
+        console.log("Matches?", adminFromProxy.toLowerCase() === PROXY_ADMIN_ADDRESS.toLowerCase());
     } catch (error) {
-        console.log("✗ Could not get implementation:", error.message);
+        console.log("✗ Error reading admin:", error.message);
     }
     console.log("");
 
-    // 3. Deploy V2 and try upgrade with better error handling
-    console.log("→ Deploying V2...");
-    const UpgradeableContractV2 = await ethers.getContractFactory("UpgradeableContractV2");
-    const v2Implementation = await UpgradeableContractV2.deploy();
-    await v2Implementation.waitForDeployment();
-    const v2Address = await v2Implementation.getAddress();
-    console.log("✓ V2 deployed at:", v2Address);
-    console.log("");
-
-    // 4. Try the upgrade with detailed error catching
-    console.log("→ Attempting upgrade...");
+    // Check if we can call the proxy directly (we shouldn't be able to as non-admin)
+    console.log("→ Checking proxy access...");
     try {
-        // Try without data first
-        const upgradeTx = await proxyAdmin.upgrade(PROXY_ADDRESS, v2Address);
-        console.log("Transaction hash:", upgradeTx.hash);
-        await upgradeTx.wait();
-        console.log("✓ Upgrade successful!");
+        const proxy = await ethers.getContractAt(
+            "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy",
+            PROXY_ADDRESS,
+        );
+
+        // Try to read implementation (only admin can do this on TransparentProxy)
+        console.log("Attempting to access proxy admin functions...");
     } catch (error) {
-        console.log("✗ Upgrade failed with 'upgrade' method");
-        console.log("Error:", error.message);
-        console.log("");
-
-        // Try with upgradeAndCall
-        console.log("→ Trying upgradeAndCall...");
-        try {
-            const upgradeTx = await proxyAdmin.upgradeAndCall(PROXY_ADDRESS, v2Address, "0x");
-            console.log("Transaction hash:", upgradeTx.hash);
-            await upgradeTx.wait();
-            console.log("✓ Upgrade successful!");
-        } catch (error2) {
-            console.log("✗ upgradeAndCall also failed");
-            console.log("Error:", error2.message);
-
-            // Get the full error
-            if (error2.data) {
-                console.log("Error data:", error2.data);
-            }
-        }
+        console.log("Note:", error.message);
     }
+    console.log("");
 
-    console.log("\n=== Debug Complete ===\n");
+    // Try to manually call upgradeToAndCall on the proxy
+    console.log("→ Testing direct upgrade call on proxy...");
+    console.log("NOTE: This should fail because only ProxyAdmin can call it");
+    console.log("");
+
+    console.log("=== Configuration Check Complete ===\n");
+    console.log("If owner matches and admin matches, the issue might be:");
+    console.log("1. Gas estimation failing");
+    console.log("2. OpenZeppelin v5 interface mismatch");
+    console.log("3. Proxy is not properly initialized");
 }
 
 main()
