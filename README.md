@@ -64,8 +64,8 @@ SEPOLIA_RPC_URL=your_sepolia_rpc__url
 PRIVATE_KEY=your_private_key
 ETHERSCAN_API_KEY=api_key
 COINMARKETCAP_API_KEY=api_key
-PROXYADDRESS=your_proxy_address   // Address you get from step 4
-PROXYADMINADDRESS=your_proxyadmin_address   // Address you get from step 5
+PROXYADDRESS=your_proxy_address   // Address from step 4
+PROXYADMINADDRESS=your_proxyadmin_address   // Address from step 5
 EIP1967ADMINSLOT=0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103
 ```
 
