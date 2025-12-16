@@ -1,6 +1,6 @@
 # Smart Contract Upgrades Explained (Complete Beginner's Guide)
 
-## 🏢 The Basic Problem
+## 📁 The Basic Problem
 
 Normal smart contracts are PERMANENT - once deployed, you can't change the code. It's like building a house and realizing you can't ever renovate it!
 
@@ -58,7 +58,7 @@ You (User) → Call reception (Proxy) → Reception forwards to John (Implementa
 **When you upgrade:**
 
 You (User) → Call reception (Proxy) → Reception forwards to Sarah (Implementation V2)
-Key point: You ALWAYS call the same phone number (proxy address), but the person answering (implementation) can change!
+Key point: You ALWAYS call the same reception (proxy address), but the actual worker (implementation) can change!
 
 ## 📚 Simple Mental Model
 
@@ -103,7 +103,7 @@ contract UpgradeableContract {
 
 **Deployment creates 3 contracts:**
 
-1. Implementation V1 at: 0x...
+1. Implementation V1 at: 0xAAA...
 2. ProxyAdmin at: 0xB10...E35B
 3. Proxy at:0x84E...De7f (THIS is the address users interact with)
 
@@ -148,7 +148,7 @@ contract UpgradeableContractV2 {
 
 ```JavaScript
 // Deploy V2
-UpgradeableContractV2 deployed at: 0xDDD...
+UpgradeableContractV2 deployed at: 0xBBB...
 
 // Tell ProxyAdmin to update the proxy
 proxyAdmin.upgradeAndCall(
@@ -161,10 +161,10 @@ proxyAdmin.upgradeAndCall(
 **What happens internally:**
 
 Before upgrade:
-Proxy (0x84E...De7f) points to → Implementation V1 (0x...)
+Proxy (0x84E...De7f) points to → Implementation V1 (0xAAA...)
 
 After upgrade:
-Proxy (0x84E...De7f) points to → Implementation V2 (0x...)
+Proxy (0x84E...De7f) points to → Implementation V2 (0xBBB...)
 
 ### Step 4: Use the Upgraded Contract
 
