@@ -5,7 +5,7 @@ async function main() {
     const PROXY_ADDRESS = process.env.PROXYADDRESS;
     const PROXY_ADMIN_ADDRESS = process.env.PROXYADMINADDRESS;
 
-    console.log("\n=== Upgrading to V2 ===\n");
+    console.log("\n=== Upgrading to V2 (OZ v5 Standard ProxyAdmin) ===\n");
     console.log("Proxy:", PROXY_ADDRESS);
     console.log("ProxyAdmin:", PROXY_ADMIN_ADDRESS);
     console.log("");
@@ -30,25 +30,18 @@ async function main() {
     console.log("✓ V2 deployed at:", v2Address);
     console.log("");
 
-    // 3. Get ProxyAdmin contract using the correct factory
-    console.log("→ Getting ProxyAdmin contract...");
-    const ProxyAdmin = await ethers.getContractFactory(
-        "contracts/proxy/UpgradeableContractProxyAdmin.sol:UpgradeableContractProxyAdmin",
+    // 3. Use OpenZeppelin's standard ProxyAdmin ABI (not your custom one)
+    console.log("→ Connecting to OpenZeppelin ProxyAdmin...");
+
+    // Import OpenZeppelin's ProxyAdmin
+    const proxyAdmin = await ethers.getContractAt(
+        "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol:ProxyAdmin",
+        PROXY_ADMIN_ADDRESS,
     );
-    const proxyAdmin = ProxyAdmin.attach(PROXY_ADMIN_ADDRESS).connect(signer);
 
     console.log("→ Executing upgrade...");
     try {
-        // Use upgrade() instead of upgradeAndCall() since we don't need to call any function
-        const iface = new ethers.Interface(["function upgrade(address proxy, address implementation) external"]);
-
-        const data = iface.encodeFunctionData("upgrade", [PROXY_ADDRESS, v2Address]);
-
-        const tx = await signer.sendTransaction({
-            to: PROXY_ADMIN_ADDRESS,
-            data: data,
-            gasLimit: 200000,
-        });
+        const tx = await proxyAdmin.upgradeAndCall(PROXY_ADDRESS, v2Address, "0x", { gasLimit: 300000 });
 
         console.log("Transaction hash:", tx.hash);
         console.log("Etherscan:", `https://sepolia.etherscan.io/tx/${tx.hash}`);
