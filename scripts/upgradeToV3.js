@@ -70,13 +70,10 @@ async function main() {
     console.log("✓ Value after addition:", value.toString());
     console.log("");
 
-    console.log("====================================");
     console.log("✓ Successfully upgraded to V2!");
-    console.log("====================================");
     console.log("V2 Implementation:", v3Address);
     console.log("Proxy:", PROXY_ADDRESS);
     console.log("View on Etherscan:", `https://sepolia.etherscan.io/address/${PROXY_ADDRESS}`);
-    console.log("====================================\n");
 }
 
 main()
