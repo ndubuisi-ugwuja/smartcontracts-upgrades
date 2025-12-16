@@ -1,6 +1,0 @@
-{
-  "UpgradeableContractModule#UpgradeableContract": "0x816B0205acCED2A6D4c9183b12ED4593aF1AA1eE",
-  "UpgradeableContractModule#UpgradeableContractProxyAdmin": "0x7BFcDe425c075Ba76216C415a33f0D6503C12108",
-  "UpgradeableContractModule#TransparentUpgradeableProxy": "0xfA30b2c9f902849Ef98F1c25dA824F29ec7f7B80",
-  "UpgradeableContractModule#ProxiedUpgradeableContract": "0xfA30b2c9f902849Ef98F1c25dA824F29ec7f7B80"
-}
