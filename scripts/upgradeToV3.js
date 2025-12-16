@@ -62,12 +62,12 @@ async function main() {
     const newVersion = await proxyV3.version();
     console.log("✓ New version:", newVersion.toString());
 
-    // Test V2 specific function
+    // Test V3 specific function
     console.log("\n→ Testing V3 addToValue function...");
     const tx = await proxyV3.addToValue();
     await tx.wait();
     const value = await proxyV3.retrieve();
-    console.log("✓ Value after increment:", value.toString());
+    console.log("✓ Value after addition:", value.toString());
     console.log("");
 
     console.log("====================================");

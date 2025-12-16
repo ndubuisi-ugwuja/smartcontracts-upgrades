@@ -19,6 +19,11 @@ contract UpgradeableContractV3 {
         return 3;
     }
 
+    function increment() public {
+        value = value + 2;
+        emit ValueChanged(value);
+    }
+
     function addToValue() public {
         value = value + 3;
         emit ValueChanged(value);
