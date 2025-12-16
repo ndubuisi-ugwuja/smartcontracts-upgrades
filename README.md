@@ -37,7 +37,25 @@ cd smartcontracts-upgrades
 yarn install
 ```
 
-### 3. Configure environment variables
+### 3. 📦 Compile Contracts
+
+```bash
+yarn hardhat compile
+```
+
+### 4. 🚀 Deploy Proxy (Initial Version)
+
+```bash
+yarn hardhat ignition deploy ignition/modules/UpgradeableContractModule.js --network sepolia
+```
+
+### 5. Get proxy Admin address
+
+```bash
+yarn hardhat run scripts/getProxyAdmin.js --network sepolia
+```
+
+### 6. Configure environment variables
 
 Create a .env file:
 
@@ -46,23 +64,12 @@ SEPOLIA_RPC_URL=your_sepolia_rpc__url
 PRIVATE_KEY=your_private_key
 ETHERSCAN_API_KEY=api_key
 COINMARKETCAP_API_KEY=api_key
-PROXYADDRESS=your_proxy_address
-PROXYADMINADDRESS=your_proxyadmin_address
+PROXYADDRESS=your_proxy_address   // Address you get from step 4
+PROXYADMINADDRESS=your_proxyadmin_address   // Address you get from step 5
+EIP1967ADMINSLOT=0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103
 ```
 
-### 📦 Compile Contracts
-
-```bash
-yarn hardhat compile
-```
-
-### 🚀 Deploy Proxy (Initial Version)
-
-```bash
-yarn hardhat ignition deploy ignition/modules/UpgradeableContractModule.js --network sepolia
-```
-
-### 🔁 Upgrade Contract
+### 7. 🔁 Upgrade Contract
 
 ```bash
 // Upgrade to version 2
