@@ -1,6 +1,6 @@
 # Smart Contract Upgrades Explained (Complete Beginner's Guide)
 
-## 📁 The Basic Problem
+## 📂 The Basic Problem
 
 Normal smart contracts are PERMANENT - once deployed, you can't change the code. It's like building a house and realizing you can't ever renovate it!
 
