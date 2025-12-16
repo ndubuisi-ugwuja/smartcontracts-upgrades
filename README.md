@@ -43,10 +43,10 @@ yarn install
 yarn hardhat compile
 ```
 
-### 4. 🚀 Deploy Proxy (Initial Version)
+### 4. 🚀 Deploy and verify Proxy (Initial Version)
 
 ```bash
-yarn hardhat ignition deploy ignition/modules/UpgradeableContractModule.js --network sepolia
+yarn hardhat ignition deploy ignition/modules/UpgradeableContractModule.js --network sepolia --verify
 ```
 
 ### 5. Get proxy Admin address
