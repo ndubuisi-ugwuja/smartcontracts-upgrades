@@ -2,7 +2,7 @@
 
 This project demonstrates how to build and upgrade Ethereum smart contracts using the **Transparent Proxy pattern** with **Hardhat** and **OpenZeppelin Contracts (v5)**.
 
-## **[Click to read detailed explanation of how upgrades work](contracts/index.md)**
+## **[Click for a detailed explanation of how upgrades work.](contracts/index.md)**
 
 It serves as a practical reference for understanding:
 
