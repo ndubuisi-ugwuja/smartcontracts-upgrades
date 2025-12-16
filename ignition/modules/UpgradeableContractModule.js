@@ -1,22 +1,27 @@
 const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
 
 module.exports = buildModule("UpgradeableContractModule", (m) => {
-    // Get the deployer account (or specify an owner address)
+    // Get the deployer account
     const owner = m.getAccount(0);
-
-    // Deploy ProxyAdmin first
-    const proxyAdmin = m.contract("UpgradeableContractProxyAdmin", [owner]);
 
     // Deploy the implementation contract
     const implementation = m.contract("UpgradeableContract");
 
-    // Deploy TransparentUpgradeableProxy
-    const proxy = m.contract("TransparentUpgradeableProxy", [implementation, proxyAdmin, "0x"]);
+    // In OpenZeppelin v5, TransparentUpgradeableProxy creates its own ProxyAdmin internally
+    // The second parameter is the initial owner (not a ProxyAdmin address)
+    const proxy = m.contract("TransparentUpgradeableProxy", [
+        implementation, // implementation address
+        owner, // initial owner (NOT ProxyAdmin address!)
+        "0x", // initialization data
+    ]);
 
-    // Get proxied instance for interaction (with unique id)
+    // Get the ProxyAdmin address that was created by the proxy
+    // We'll need to retrieve this after deployment
+
+    // Get proxied instance for interaction
     const proxiedContract = m.contractAt("UpgradeableContract", proxy, {
         id: "ProxiedUpgradeableContract",
     });
 
-    return { proxyAdmin, implementation, proxy, proxiedContract };
+    return { implementation, proxy, proxiedContract };
 });
