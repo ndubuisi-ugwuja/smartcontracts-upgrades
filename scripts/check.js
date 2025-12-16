@@ -2,68 +2,55 @@ require("dotenv").config();
 const { ethers } = require("hardhat");
 
 async function main() {
-    const PROXY_ADDRESS = process.env.PROXYADDRESS;
-    const PROXY_ADMIN_ADDRESS = process.env.PROXYADMINADDRESS;
+    console.log("\n=== Investigating Admin Addresses ===\n");
 
-    console.log("\n=== Checking ProxyAdmin Configuration ===\n");
+    const RECORDED_PROXY_ADMIN = "0x7BFcDe425c075Ba76216C415a33f0D6503C12108";
+    const ACTUAL_PROXY_ADMIN = "0x290F84BE566e9E45436B4ca4ddb120ded79D49eB";
+    const PROXY_ADDRESS = "0xfA30b2c9f902849Ef98F1c25dA824F29ec7f7B80";
 
-    const [signer] = await ethers.getSigners();
-    console.log("Your address:", signer.address);
+    // Check if both addresses have code
+    console.log("→ Checking recorded ProxyAdmin (from deployed_addresses.json):");
+    console.log("Address:", RECORDED_PROXY_ADMIN);
+    const recordedCode = await ethers.provider.getCode(RECORDED_PROXY_ADMIN);
+    console.log("Has code:", recordedCode.length > 2);
+    console.log("Code length:", recordedCode.length);
     console.log("");
 
-    // Check ProxyAdmin owner
-    const proxyAdmin = await ethers.getContractAt("UpgradeableContractProxyAdmin", PROXY_ADMIN_ADDRESS);
+    console.log("→ Checking actual ProxyAdmin (stored in proxy):");
+    console.log("Address:", ACTUAL_PROXY_ADMIN);
+    const actualCode = await ethers.provider.getCode(ACTUAL_PROXY_ADMIN);
+    console.log("Has code:", actualCode.length > 2);
+    console.log("Code length:", actualCode.length);
+    console.log("");
 
-    console.log("→ Checking ProxyAdmin owner...");
-    try {
-        const owner = await proxyAdmin.owner();
-        console.log("ProxyAdmin owner:", owner);
-        console.log("Are you the owner?", owner.toLowerCase() === signer.address.toLowerCase());
-    } catch (error) {
-        console.log("✗ Error getting owner:", error.message);
+    // Check ownership of actual ProxyAdmin
+    if (actualCode.length > 2) {
+        console.log("→ Checking ownership of actual ProxyAdmin:");
+        try {
+            const proxyAdmin = await ethers.getContractAt("UpgradeableContractProxyAdmin", ACTUAL_PROXY_ADMIN);
+            const owner = await proxyAdmin.owner();
+            const [signer] = await ethers.getSigners();
+            console.log("Owner:", owner);
+            console.log("Your address:", signer.address);
+            console.log("You are owner:", owner.toLowerCase() === signer.address.toLowerCase());
+        } catch (error) {
+            console.log("✗ Error:", error.message);
+        }
+        console.log("");
     }
+
+    // Check all deployment history
+    console.log("→ Checking deployment history:");
+    console.log("Look in ignition/deployments/chain-11155111/ for journal files");
     console.log("");
 
-    // Check admin of the proxy
-    console.log("→ Checking proxy admin...");
-    try {
-        // Read the admin slot directly from the proxy
-        const EIP1967_ADMIN_SLOT = "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103";
-        const adminStorage = await ethers.provider.getStorage(PROXY_ADDRESS, EIP1967_ADMIN_SLOT);
-        const adminFromProxy = ethers.getAddress("0x" + adminStorage.slice(-40));
-        console.log("Admin stored in proxy:", adminFromProxy);
-        console.log("Expected ProxyAdmin:", PROXY_ADMIN_ADDRESS);
-        console.log("Matches?", adminFromProxy.toLowerCase() === PROXY_ADMIN_ADDRESS.toLowerCase());
-    } catch (error) {
-        console.log("✗ Error reading admin:", error.message);
-    }
-    console.log("");
-
-    // Check if we can call the proxy directly (we shouldn't be able to as non-admin)
-    console.log("→ Checking proxy access...");
-    try {
-        const proxy = await ethers.getContractAt(
-            "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy",
-            PROXY_ADDRESS,
-        );
-
-        // Try to read implementation (only admin can do this on TransparentProxy)
-        console.log("Attempting to access proxy admin functions...");
-    } catch (error) {
-        console.log("Note:", error.message);
-    }
-    console.log("");
-
-    // Try to manually call upgradeToAndCall on the proxy
-    console.log("→ Testing direct upgrade call on proxy...");
-    console.log("NOTE: This should fail because only ProxyAdmin can call it");
-    console.log("");
-
-    console.log("=== Configuration Check Complete ===\n");
-    console.log("If owner matches and admin matches, the issue might be:");
-    console.log("1. Gas estimation failing");
-    console.log("2. OpenZeppelin v5 interface mismatch");
-    console.log("3. Proxy is not properly initialized");
+    console.log("=== Investigation Complete ===");
+    console.log("\nPossible scenarios:");
+    console.log("1. You deployed contracts multiple times");
+    console.log("2. Ignition recorded wrong address");
+    console.log("3. Proxy was deployed with different ProxyAdmin than recorded");
+    console.log("\nSolution: Use the ACTUAL ProxyAdmin address from the proxy:");
+    console.log("PROXYADMINADDRESS=" + ACTUAL_PROXY_ADMIN);
 }
 
 main()
