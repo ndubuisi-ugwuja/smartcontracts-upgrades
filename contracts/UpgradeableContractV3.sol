@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.28;
 
-contract UpgradeableContractV2 {
+contract UpgradeableContractV3 {
     uint256 internal value;
 
     event ValueChanged(uint256 newValue);
