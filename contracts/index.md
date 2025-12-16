@@ -220,7 +220,7 @@ contract V2 {
 
 ---
 
-## 🔐 The ProxyAdmin (Security)
+## 🛡️ The ProxyAdmin (Security)
 
 **Why do we need it?**
 
