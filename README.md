@@ -67,6 +67,7 @@ COINMARKETCAP_API_KEY=api_key
 PROXYADDRESS=your_proxy_address   // Address from step 4
 PROXYADMINADDRESS=your_proxyadmin_address   // Address from step 5
 EIP1967ADMINSLOT=0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103
+EIP1967IMPLEMENTATIONSLOT=0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc   // For staging test
 ```
 
 ### 7. 🔁 Upgrade Contract
