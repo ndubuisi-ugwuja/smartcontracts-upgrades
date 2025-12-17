@@ -6,7 +6,7 @@ const developmentChains = ["hardhat", "localhost"];
 
 !developmentChains.includes(network.name)
     ? describe.skip
-    : describe("Upgradeable Contracts - Full Test Suite", function () {
+    : describe("Upgradeable Contracts - Full Unit Test Suite", function () {
           let owner, addr1, addr2;
           let proxyAddress, proxyAdminAddress;
           let proxy, proxyAdmin;
