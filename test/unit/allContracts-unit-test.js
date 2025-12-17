@@ -342,9 +342,9 @@ const developmentChains = ["hardhat", "localhost"];
                   const proxyV3 = await ethers.getContractAt("UpgradeableContractV3", proxyAddress);
 
                   // Starting value: 100
-                  await proxyV3.increment(); // 100 + 2 = 102
-                  await proxyV3.addToValue(); // 102 + 3 = 105
-                  await proxyV3.increment(); // 105 + 2 = 107
+                  await proxyV3.increment();
+                  await proxyV3.addToValue();
+                  await proxyV3.increment();
 
                   expect(await proxyV3.retrieve()).to.equal(107);
               });
