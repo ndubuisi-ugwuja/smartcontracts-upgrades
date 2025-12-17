@@ -24,7 +24,7 @@ module.exports = {
         enabled: true,
     },
     gasReporter: {
-        enabled: false,
+        enabled: true,
         outputFile: "gas-report.txt",
         noColors: true,
         currency: "USD",
