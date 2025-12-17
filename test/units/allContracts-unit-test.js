@@ -266,7 +266,7 @@ describe("Upgradeable Contracts - Full Test Suite", function () {
             expect(await proxyV3.version()).to.equal(3);
         });
 
-        it("Should preserve storage after upgrade to V3", async function () {
+        it("Should preserve storage after upgrade to V3, store, retrieve values correctly", async function () {
             // Upgrade to V3
             const UpgradeableContractV3 = await ethers.getContractFactory("UpgradeableContractV3");
             const implementationV3 = await UpgradeableContractV3.deploy();
@@ -277,6 +277,11 @@ describe("Upgradeable Contracts - Full Test Suite", function () {
             const proxyV3 = await ethers.getContractAt("UpgradeableContractV3", proxyAddress);
 
             expect(await proxyV3.retrieve()).to.equal(100);
+
+            await proxyV3.store(42);
+            expect(await proxyV3.retrieve()).to.equal(42);
+
+            await expect(proxyV3.store(100)).to.emit(proxyV3, "ValueChanged").withArgs(100);
         });
 
         it("Should have working addToValue function in V3", async function () {
