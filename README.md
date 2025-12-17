@@ -82,6 +82,16 @@ yarn hardhat run scripts/upgradeToV3.js --network sepolia
 
 Each upgrade deploys a new implementation and updates the proxy via ProxyAdmin, while preserving contract state.
 
+### 8. 🧪 Run Unit & Staging Tests
+
+```bash
+// Unit test
+yarn hardhat test --network hardhat
+
+// Staging test
+yarn hardhat test --network sepolia
+```
+
 ---
 
 ## ⚠️ Important Notes
