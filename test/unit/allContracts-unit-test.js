@@ -1,6 +1,5 @@
 const { expect } = require("chai");
 const { ethers, network } = require("hardhat");
-require("dotenv").config();
 
 const developmentChains = ["hardhat", "localhost"];
 
